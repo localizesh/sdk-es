@@ -34,8 +34,3 @@ export interface Document {
   layout: LayoutRoot;
   metadata?: { [key: string]: any };
 }
-
-export interface Processor {
-  parse(res: string, ctx?: Context): Document;
-  stringify(doc: Document, ctx?: Context): string;
-}
