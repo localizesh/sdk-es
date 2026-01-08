@@ -1,30 +1,43 @@
 import { sha256 } from "js-sha256";
 
-import {Context, Tags} from "./types.js";
+import { Context, Tags } from "./types.js";
 
 type Payload = {
-  index: number
-  text: string
-  tags?: Tags
-  context?: Context
-}
+  text: string;
+  tags?: Tags;
+  context?: Context;
+  index?: number;
+};
+
+type IdGeneratorOptions = {
+  ignoreIndex?: boolean;
+};
 
 class IdGenerator {
-
   private indexMap: Record<string, number> = {};
+  private ignoreIndex: boolean;
+
+  constructor(options: IdGeneratorOptions = {}) {
+    this.ignoreIndex = options.ignoreIndex || false;
+  }
 
   public generateId(text: string, tags?: Tags, context?: Context): string {
-    if (this.indexMap[text]) {
-      this.indexMap[text] += 1;
-    } else {
-      this.indexMap[text] = 1;
+    let index: number | undefined;
+
+    if (!this.ignoreIndex) {
+      if (this.indexMap[text]) {
+        this.indexMap[text] += 1;
+      } else {
+        this.indexMap[text] = 1;
+      }
+      index = this.indexMap[text];
     }
 
     const payload: Payload = {
-      index: this.indexMap[text],
       text,
       tags,
-      context
+      context,
+      index,
     };
 
     return sha256(JSON.stringify(payload));
