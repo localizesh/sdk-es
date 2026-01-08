@@ -63,7 +63,6 @@ version-resolver:
       - "security"
   default: patch
 
-# Опционально: автолейблинг (можно удалить целиком, если не хотите магии)
 autolabeler:
   - label: "breaking"
     title:
@@ -126,4 +125,3 @@ autolabeler:
       - "/\\bsecurity\\b/i"
       - "/\\bcve-\\d{4}-\\d+\\b/i"
       - "/\\bvulnerability\\b/i"
-
