@@ -2,8 +2,8 @@ node_modules/
 src/protos/
 
 dist/
+proto/
 
 
 .idea
 .vscode
-
