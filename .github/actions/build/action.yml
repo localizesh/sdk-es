@@ -11,16 +11,18 @@ runs:
   steps:
     - uses: actions/setup-node@v4
       with:
-        registry-url: 'https://registry.npmjs.org'
+        registry-url: "https://registry.npmjs.org"
         node-version: 18
         cache: npm
     - run: npm ci
       env:
         NODE_AUTH_TOKEN: ${{ inputs.token }}
       shell: bash
-    - run: npm run generate
+    - run: npm run proto
       shell: bash
     - run: npm run build
+      shell: bash
+    - run: npm test
       shell: bash
     - run: npm prune --production
       shell: bash
