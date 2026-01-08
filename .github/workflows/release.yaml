@@ -1,12 +1,12 @@
 name: Release
 on:
   release:
-    types: [ published ]
+    types: [published]
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: ./.github/actions/build
       - run: npm version ${{ github.event.release.tag_name }} --no-git-tag-version
       - run: npm publish --access=public
