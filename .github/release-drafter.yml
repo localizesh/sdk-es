@@ -18,7 +18,7 @@ categories:
   - title: "✨ Features"
     labels: ["feature"]
 
-  - title: "🐛 Bug Fixes"
+  - title: "🔧 Fixes"
     labels: ["fix"]
 
   - title: "🧹 Refactoring"
@@ -30,7 +30,7 @@ categories:
   - title: "🧪 Tests"
     labels: ["test"]
 
-  - title: "🛠️ Maintenance"
+  - title: "⚙️ Maintenance"
     labels: ["chore"]
 
   - title: "⬆️ Dependency Updates"
@@ -63,6 +63,7 @@ version-resolver:
       - "security"
   default: patch
 
+# Опционально: автолейблинг (можно удалить целиком, если не хотите магии)
 autolabeler:
   - label: "breaking"
     title:
