@@ -1,8 +1,4 @@
-import {
-  Root as HastRoot,
-  Node as HastNode,
-  Element as HastElement,
-} from "hast";
+import { Root, Node, Text, Element } from "hast";
 
 export interface Segment {
   id: string;
@@ -18,14 +14,16 @@ export type Tags = {
   [key: string]: Tag;
 };
 
-export interface LayoutRoot extends HastRoot {}
+export interface LayoutRoot extends Root {}
 
-export interface LayoutSegment extends HastNode {
+export interface SegmentNode extends Node {
   type: "segment";
   id: string;
 }
 
-export interface LayoutElement extends HastElement {}
+export interface TextNode extends Text {}
+
+export type LayoutNode = Root | Element | SegmentNode | TextNode;
 
 export type Context = any;
 
@@ -33,4 +31,13 @@ export interface Document {
   segments: Segment[];
   layout: LayoutRoot;
   metadata?: { [key: string]: any };
+}
+
+declare module "hast" {
+  interface RootContentMap {
+    segment: SegmentNode;
+  }
+  interface ElementContentMap {
+    segment: SegmentNode;
+  }
 }
