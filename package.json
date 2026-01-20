@@ -22,7 +22,7 @@
     "unist-util-visit-parents": "^6.0.2"
   },
   "devDependencies": {
-    "@bufbuild/buf": "^1.63.0",
+    "@bufbuild/buf": "^1.64.0",
     "@bufbuild/protoc-gen-es": "^2.10.2",
     "@types/node": "^25.0.9",
     "typescript": "^5.9.3",
