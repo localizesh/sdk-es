@@ -18,13 +18,13 @@
     "ajv": "^8.17.1",
     "hastscript": "^9.0.1",
     "js-sha256": "^0.11.1",
-    "unist-util-visit": "^5.0.0",
+    "unist-util-visit": "^5.1.0",
     "unist-util-visit-parents": "^6.0.2"
   },
   "devDependencies": {
     "@types/node": "^25.0.9",
     "json-schema-to-typescript": "^15.0.4",
     "typescript": "^5.9.3",
-    "vitest": "^4.0.17"
+    "vitest": "^4.0.18"
   }
 }
