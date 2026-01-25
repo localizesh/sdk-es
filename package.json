@@ -10,7 +10,7 @@
   ],
   "scripts": {
     "build": "tsc",
-    "schema": "curl -o src/schema.json https://raw.githubusercontent.com/localizesh/schema/refs/heads/main/schema.json && json2ts -i schema.json -o src/schema.ts --unreachableDefinitions",
+    "schema": "curl -o src/schema.json https://raw.githubusercontent.com/localizesh/schema/refs/heads/main/schema.json && json2ts -i src/schema.json -o src/schema.ts --unreachableDefinitions",
     "test": "vitest run"
   },
   "dependencies": {
