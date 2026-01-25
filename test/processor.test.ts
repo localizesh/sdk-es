@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { Processor } from "../src/processor.js";
+import { Processor, root, segment, text } from "../src/index.js";
 import { Document, Context } from "../src/types.js";
 import type { ParseRequest, StringifyRequest } from "../src/schema.js";
 
@@ -7,7 +7,7 @@ class TestProcessor extends Processor {
   parse(res: string, ctx?: Context): Document {
     return {
       segments: [{ id: "1", text: res }],
-      layout: { type: "root", children: [] },
+      layout: root(),
       metadata: ctx,
     };
   }
@@ -65,7 +65,7 @@ describe("Processor", () => {
       const request: StringifyRequest = {
         document: {
           segments: [{ id: "1", text: "Hello World" }],
-          layout: { type: "root", children: [] },
+          layout: root(),
         },
       };
       const inputJson = JSON.stringify(request);

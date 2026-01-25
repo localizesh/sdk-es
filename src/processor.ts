@@ -72,24 +72,17 @@ export abstract class Processor {
   }
 
   private handleParse(request: ParseRequest): string {
-    const doc = this.parse(request.resource, request.context);
+    const document = this.parse(request.resource, request.context);
     const response: ParseResponse = {
-      document: doc as any, // Layout is typed as LayoutRoot but schema expects generic object
+      document,
     };
     return JSON.stringify(response);
   }
 
   private handleStringify(request: StringifyRequest): string {
-    if (!request.document) {
-      throw new Error("Missing document in StringifyRequest");
-    }
-
-    const res = this.stringify(
-      request.document as unknown as Document,
-      request.context,
-    );
+    const resource = this.stringify(request.document as any, request.context);
     const response: StringifyResponse = {
-      resource: res,
+      resource,
     };
     return JSON.stringify(response);
   }
