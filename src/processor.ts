@@ -1,16 +1,24 @@
-import { create, fromJsonString, toJsonString } from "@bufbuild/protobuf";
+import Ajv from "ajv";
 import { Document, Context } from "./types.js";
-import { fromProtoDocument, toProtoDocument } from "./mappers.js";
-import {
+import type {
   ParseRequest,
-  ParseRequestSchema,
-  ParseResponseSchema,
+  ParseResponse,
   StringifyRequest,
-  StringifyRequestSchema,
-  StringifyResponseSchema,
-} from "./protos/localize/processor_pb.js";
+  StringifyResponse,
+} from "./schema.js";
+import schema from "./schema.json" assert { type: "json" };
 
 export abstract class Processor {
+  private static ajv = new Ajv();
+  private static validateParseRequest = Processor.ajv.compile({
+    ...schema.definitions.ParseRequest,
+    definitions: schema.definitions,
+  });
+  private static validateStringifyRequest = Processor.ajv.compile({
+    ...schema.definitions.StringifyRequest,
+    definitions: schema.definitions,
+  });
+
   abstract parse(res: string, ctx?: Context): Document;
   abstract stringify(doc: Document, ctx?: Context): string;
 
@@ -20,22 +28,24 @@ export abstract class Processor {
    * Safe to use in browser environments.
    */
   public process(input: string): string {
-    // Try to parse as ParseRequest first
-    try {
-      const request = fromJsonString(ParseRequestSchema, input);
-      // Valid ParseRequest
-      return this.handleParse(request);
-    } catch {
-      // Ignore error and try StringifyRequest
+    const request = JSON.parse(input);
+
+    // Validate and handle ParseRequest
+    if (Processor.validateParseRequest(request)) {
+      return this.handleParse(request as unknown as ParseRequest);
     }
 
-    // Fallback to StringifyRequest
-    try {
-      const request = fromJsonString(StringifyRequestSchema, input);
-      return this.handleStringify(request);
-    } catch (e) {
-      throw new Error(`Failed to parse request: ${e}`);
+    // Validate and handle StringifyRequest
+    if (Processor.validateStringifyRequest(request)) {
+      return this.handleStringify(request as unknown as StringifyRequest);
     }
+
+    // Collect all validation errors
+    const errors = [
+      ...(Processor.validateParseRequest.errors || []),
+      ...(Processor.validateStringifyRequest.errors || []),
+    ];
+    throw new Error(`Invalid request: ${JSON.stringify(errors)}`);
   }
 
   /**
@@ -63,10 +73,10 @@ export abstract class Processor {
 
   private handleParse(request: ParseRequest): string {
     const doc = this.parse(request.resource, request.context);
-    const response = create(ParseResponseSchema, {
-      document: toProtoDocument(doc),
-    });
-    return toJsonString(ParseResponseSchema, response);
+    const response: ParseResponse = {
+      document: doc as any, // Layout is typed as LayoutRoot but schema expects generic object
+    };
+    return JSON.stringify(response);
   }
 
   private handleStringify(request: StringifyRequest): string {
@@ -74,13 +84,14 @@ export abstract class Processor {
       throw new Error("Missing document in StringifyRequest");
     }
 
-    const doc = fromProtoDocument(request.document);
-    const res = this.stringify(doc, request.context);
-
-    const response = create(StringifyResponseSchema, {
+    const res = this.stringify(
+      request.document as unknown as Document,
+      request.context,
+    );
+    const response: StringifyResponse = {
       resource: res,
-    });
-    return toJsonString(StringifyResponseSchema, response);
+    };
+    return JSON.stringify(response);
   }
 
   private readStdin(): Promise<string> {

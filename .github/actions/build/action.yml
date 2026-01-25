@@ -18,7 +18,7 @@ runs:
       env:
         NODE_AUTH_TOKEN: ${{ inputs.token }}
       shell: bash
-    - run: npm run proto
+    - run: npm run schema
       shell: bash
     - run: npm run build
       shell: bash

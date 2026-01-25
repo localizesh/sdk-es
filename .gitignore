@@ -1,9 +1,7 @@
 node_modules/
-src/protos/
-
 dist/
-proto/
 
+src/schema.*
 
 .idea
 .vscode

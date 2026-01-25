@@ -1,6 +1,10 @@
 import { sha256 } from "js-sha256";
 
-import { Context, Tags } from "./types.js";
+import { Context, Tag } from "./types.js";
+
+type Tags = {
+  [key: string]: Tag;
+};
 
 type Payload = {
   text: string;

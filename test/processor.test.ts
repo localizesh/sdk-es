@@ -1,15 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { Processor } from "../src/processor.js";
 import { Document, Context } from "../src/types.js";
-import { toJsonString, create } from "@bufbuild/protobuf";
-import {
-  ParseRequestSchema,
-  StringifyRequestSchema,
-  ParseResponseSchema,
-  StringifyResponseSchema,
-} from "../src/protos/localize/processor_pb.js";
-import { DocumentSchema } from "../src/protos/localize/document_pb.js";
-import { SegmentSchema } from "../src/protos/localize/segment_pb.js";
+import type { ParseRequest, StringifyRequest } from "../src/schema.js";
 
 class TestProcessor extends Processor {
   parse(res: string, ctx?: Context): Document {
@@ -56,11 +48,11 @@ describe("Processor", () => {
 
   describe("process()", () => {
     it("should handle ParseRequest", () => {
-      const request = create(ParseRequestSchema, {
+      const request: ParseRequest = {
         resource: "Hello World",
         context: { foo: "bar" },
-      });
-      const inputJson = toJsonString(ParseRequestSchema, request);
+      };
+      const inputJson = JSON.stringify(request);
 
       const output = processor.process(inputJson);
       const response = JSON.parse(output);
@@ -70,14 +62,13 @@ describe("Processor", () => {
     });
 
     it("should handle StringifyRequest", () => {
-      const doc = create(DocumentSchema, {
-        segments: [create(SegmentSchema, { id: "1", text: "Hello World" })],
-        layout: { type: "root", children: [] },
-      });
-      const request = create(StringifyRequestSchema, {
-        document: doc,
-      });
-      const inputJson = toJsonString(StringifyRequestSchema, request);
+      const request: StringifyRequest = {
+        document: {
+          segments: [{ id: "1", text: "Hello World" }],
+          layout: { type: "root", children: [] },
+        },
+      };
+      const inputJson = JSON.stringify(request);
 
       const output = processor.process(inputJson);
       const response = JSON.parse(output);
@@ -88,10 +79,10 @@ describe("Processor", () => {
 
   describe("run()", () => {
     it("should handle ParseRequest from stdin", async () => {
-      const request = create(ParseRequestSchema, {
+      const request: ParseRequest = {
         resource: "Hello World",
-      });
-      const inputJson = toJsonString(ParseRequestSchema, request);
+      };
+      const inputJson = JSON.stringify(request);
 
       const runPromise = processor.run();
 
