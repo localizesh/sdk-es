@@ -5,8 +5,10 @@ A TypeScript/JavaScript SDK for building [Localize.sh](https://localize.sh) proc
 ## Features
 
 - **Abstract Processor**: A base class for creating custom processors that work seamlessly with the Localize.sh CLI (Node.js) and in browser environments.
-- **ID Generation**: Utilities for generating deterministic IDs for segments.
+- **JSON Validation**: Runtime validation of requests using JSON Schema and AJV.
+- **ID Generation**: Utilities for generating deterministic MD5-based IDs for segments.
 - **Type Definitions**: Comprehensive TypeScript definitions for Documents, Segments, and Layouts (HAST compatible).
+- **Browser Compatible**: Works in both Node.js and browser environments.
 
 ## Installation
 
@@ -28,11 +30,13 @@ export class MyCustomProcessor extends Processor {
   parse(res: string, ctx?: Context): Document {
     return {
       segments: [
-        { id: "1", text: "Hello World" }
+        { id: "dfc45caaec2819e2446e5bb669642cc9", text: "Hello World" }
       ],
       layout: {
         type: "root",
-        children: []
+        "children": [
+          { "type": "segment", "id": "dfc45caaec2819e2446e5bb669642cc9" }
+        ]
       }
     };
   }
@@ -57,7 +61,7 @@ import { IdGenerator } from "@localizesh/sdk";
 
 // Default: accounts for duplicates (index 1, 2, 3...)
 const generator = new IdGenerator();
-const id1 = generator.generateId("Hello World", { someTag: { attrs: {} } });
+const id1 = generator.generateId("Hello {b1}World{/b1}", { b1: { class: "bold" } });
 
 // Ignore Index: returns same ID for duplicates
 const generatorNoIndex = new IdGenerator({ ignoreIndex: true });
@@ -71,9 +75,9 @@ const id2 = generatorNoIndex.generateId("Hello World");
     npm install
     ```
 
-2.  **Generate Protobuf code** (requires `buf`):
+2.  **Generate schema types**:
     ```bash
-    npm run proto
+    npm run schema
     ```
 
 3.  **Build the SDK**:
