@@ -1,4 +1,4 @@
-import { sha256 } from "js-sha256";
+import { md5 } from "js-md5";
 
 import { Context, Tag } from "./types.js";
 
@@ -44,7 +44,7 @@ class IdGenerator {
       index,
     };
 
-    return sha256(JSON.stringify(payload));
+    return md5(JSON.stringify(payload));
   }
 }
 
