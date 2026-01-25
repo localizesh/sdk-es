@@ -23,10 +23,10 @@ describe("IdGenerator", () => {
 
     it("should generate different IDs for different tags", () => {
       const generator = new IdGenerator();
-      const id1 = generator.generateId("Hello", { b: { attrs: {} } });
+      const id1 = generator.generateId("Hello", { b1: { class: "bold" } });
 
       const generator2 = new IdGenerator();
-      const id2 = generator2.generateId("Hello", { i: { attrs: {} } });
+      const id2 = generator2.generateId("Hello", { i1: { class: "italic" } });
 
       expect(id1).not.toBe(id2);
     });

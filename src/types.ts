@@ -1,19 +1,7 @@
 import { Root, Node, Text, Element } from "hast";
+import type { Tag as SchemaTag } from "./schema.js";
 
-export interface Segment {
-  id: string;
-  text: string;
-  tags?: Tags;
-}
-
-export interface Tag {
-  attrs: { [key: string]: string };
-}
-
-export type Tags = {
-  [key: string]: Tag;
-};
-
+// HAST-specific extensions
 export interface LayoutRoot extends Root {}
 
 export interface SegmentNode extends Node {
@@ -27,10 +15,22 @@ export type LayoutNode = Root | Element | SegmentNode | TextNode;
 
 export type Context = any;
 
+// Extended Document type with typed layout
 export interface Document {
   segments: Segment[];
   layout: LayoutRoot;
   metadata?: { [key: string]: any };
+}
+
+// SDK types (aligned with schema but with specific HAST types)
+export type Tag = SchemaTag;
+
+export interface Segment {
+  id: string;
+  text: string;
+  tags?: {
+    [key: string]: Tag;
+  };
 }
 
 declare module "hast" {
