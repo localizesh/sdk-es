@@ -4,14 +4,16 @@ import type { Tag as SchemaTag } from "./schema.js";
 // HAST-specific extensions
 export interface LayoutRoot extends Root {}
 
+export interface LayoutNode extends Node {}
+
+export interface ElementNode extends Element {}
+
 export interface SegmentNode extends Node {
   type: "segment";
   id: string;
 }
 
 export interface TextNode extends Text {}
-
-export type LayoutNode = Root | Element | SegmentNode | TextNode;
 
 export type Context = any;
 
