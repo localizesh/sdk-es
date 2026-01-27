@@ -6,7 +6,7 @@ import type {
   StringifyRequest,
   StringifyResponse,
 } from "./schema.js";
-import schema from "./schema.json" assert { type: "json" };
+import schema from "./schema.json" with { type: "json" };
 
 export abstract class Processor {
   private static ajv = new Ajv();
