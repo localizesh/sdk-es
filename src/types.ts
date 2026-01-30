@@ -6,14 +6,14 @@ export interface LayoutRoot extends Root {}
 
 export interface LayoutNode extends Node {}
 
-export interface ElementNode extends Element {}
+export interface LayoutElement extends Element {}
 
-export interface SegmentNode extends Node {
+export interface LayoutSegment extends Node {
   type: "segment";
   id: string;
 }
 
-export interface TextNode extends Text {}
+export interface LayoutText extends Text {}
 
 export type Context = any;
 
@@ -37,9 +37,9 @@ export interface Segment {
 
 declare module "hast" {
   interface RootContentMap {
-    segment: SegmentNode;
+    segment: LayoutSegment;
   }
   interface ElementContentMap {
-    segment: SegmentNode;
+    segment: LayoutSegment;
   }
 }

@@ -23,7 +23,7 @@ npm install @localizesh/sdk
 Extend the `Processor` abstract class to implement your custom localization logic. This works for both CLI tools and browser-based processors.
 
 ```typescript
-import { Processor, Document, Context } from "@localizesh/sdk";
+import { Processor, Document, Context, root, segment } from "@localizesh/sdk";
 
 export class MyCustomProcessor extends Processor {
   // Parse a source file (e.g., Markdown, JSON) into a Localize Document
@@ -32,12 +32,9 @@ export class MyCustomProcessor extends Processor {
       segments: [
         { id: "dfc45caaec2819e2446e5bb669642cc9", text: "Hello World" }
       ],
-      layout: {
-        type: "root",
-        "children": [
-          { "type": "segment", "id": "dfc45caaec2819e2446e5bb669642cc9" }
-        ]
-      }
+      layout: root([
+        segment("dfc45caaec2819e2446e5bb669642cc9")
+      ])
     };
   }
 
