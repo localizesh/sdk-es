@@ -13,23 +13,22 @@ import type {
 } from "./types.js";
 import { h } from "hastscript";
 
+type Child = LayoutNode | string | Child[];
+
 export function root(children: LayoutNode[] = []): LayoutRoot {
   return { type: "root", children } as LayoutRoot;
 }
 
-export function element(
-  tagName: string,
-  ...children: (LayoutNode | string)[]
-): LayoutElement;
+export function element(tagName: string, ...children: Child[]): LayoutElement;
 export function element(
   tagName: string,
   properties: { [key: string]: any },
-  ...children: (LayoutNode | string)[]
+  ...children: Child[]
 ): LayoutElement;
 export function element(
   tagName: string,
-  propertiesOrChild?: { [key: string]: any } | LayoutNode | string,
-  ...children: (LayoutNode | string)[]
+  propertiesOrChild?: { [key: string]: any } | Child,
+  ...children: Child[]
 ): LayoutElement {
   return h(
     tagName,
