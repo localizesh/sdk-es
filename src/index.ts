@@ -13,23 +13,44 @@ import type {
 } from "./types.js";
 import { h } from "hastscript";
 
-type Child = LayoutNode | string | Child[];
-
 export function root(children: LayoutNode[] = []): LayoutRoot {
   return { type: "root", children } as LayoutRoot;
 }
 
-export function element(tagName: string, ...children: Child[]): LayoutElement;
 export function element(
   tagName: string,
-  properties: { [key: string]: any },
-  ...children: Child[]
+  ...children: (string | LayoutNode | LayoutNode[])[]
 ): LayoutElement;
 export function element(
   tagName: string,
-  propertiesOrChild?: { [key: string]: any } | Child,
-  ...children: Child[]
+  properties: { [key: string]: any },
+  ...children: (string | LayoutNode | LayoutNode[])[]
+): LayoutElement;
+export function element(
+  tagName: string,
+  propertiesOrChild?:
+    | { [key: string]: any }
+    | LayoutNode
+    | string
+    | LayoutNode[],
+  ...children: (string | LayoutNode | LayoutNode[])[]
 ): LayoutElement {
+  // Check if propertiesOrChild is a Node (has 'type') or an Array (list of children)
+  if (
+    propertiesOrChild &&
+    typeof propertiesOrChild === "object" &&
+    (!Array.isArray(propertiesOrChild) ? "type" in propertiesOrChild : true)
+  ) {
+    // It's a child node or array of children -> pass empty properties
+    return h(
+      tagName,
+      {},
+      propertiesOrChild as any,
+      ...(children as any),
+    ) as LayoutElement;
+  }
+
+  // Otherwise, treat it as properties
   return h(
     tagName,
     propertiesOrChild as any,
